@@ -1,0 +1,12 @@
+Use arrow keys to move left/right
+Press 'Z' to jump
+Press 'X' to flow
+	When you flow midair, you wont be affected by gravity for 20 frames
+Press 'C' to slide while on the ground, or dive while midair
+	When hitting the ground from a dive, you will bounce high up
+	Sliding increases your jump height
+
+You have 3 ground speeds
+	Bit gear - Default state, automatically return to it when standing still
+	Byte gear - Activated by sliding, diving, and entering flow for a short time
+	Kilo gear - Activated by being in flow for 40 frames
