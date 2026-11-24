@@ -1,6 +1,7 @@
 package game.util;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL46;
 
@@ -18,13 +19,21 @@ public class Window {
         }
     };
     
+    private GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
+        // callback gives key pressed for InputHandler's polling
+        @Override
+        public void invoke(long window, int key, int scancode, int action, int mods) {
+            lastKeyPressed = key;
+        }
+    };
+    
     private long window;
     private int height;
     private int width;
-    private float prevTime;
-    private float currTime = 0f;
-
+    private int lastKeyPressed;
+    
     public Window(String title) {
+        lastKeyPressed = 0;
         if (!GLFW.glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
@@ -33,6 +42,7 @@ public class Window {
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GL46.GL_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+        GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GL46.GL_TRUE);
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL46.GL_TRUE);
         width = 800;
@@ -42,7 +52,7 @@ public class Window {
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
-
+        GLFW.glfwSetKeyCallback(window, keyCallback);
         GLFW.glfwSetFramebufferSizeCallback(window, sizeCallback);
         GLFW.glfwMakeContextCurrent(window);
         // vsync active
@@ -51,7 +61,7 @@ public class Window {
         GLFW.glfwShowWindow(window);
         
     } // Window
-
+    
     public int getHeight() {
         return height;
     } // getHeight
@@ -62,19 +72,24 @@ public class Window {
     
     public long getWindow() {
         return window;
-    } // getWindow
+    } // getWindow 
     
-    public float getDelta() {
-        prevTime = currTime;
-        currTime = (float) GLFW.glfwGetTime();
-        float delta = currTime - prevTime;
-        return delta;
-    }
-    
-     public boolean keyIsPressed(int keyCode) {
+    public boolean keyIsPressed(int keyCode) {
         return GLFW.glfwGetKey(window, keyCode) == GLFW.GLFW_PRESS;
     } // isKeyPressed
+     
+    public int getKeyPressed() {
+        return GLFW.glfwGetKey(window, 0);
+    } // getKeyPressed
+    
+    public int getLastKeyPressed() {
+        return lastKeyPressed;
+    } // getLastKeyPressed
 
+    public void setLastKeyPressed(int i) {
+        lastKeyPressed = i;
+    }
+    
     public void pollEvents() {
         GLFW.glfwPollEvents();
     } // pollEvents

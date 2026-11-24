@@ -14,10 +14,12 @@ public class Mesh {
     private int numVertices;
     private int vao;
     private List<Integer> vboList;
+    float[] positions;
 
     public Mesh(float[] positions, float[] texts, int[] indices) {
         this.numVertices = indices.length;
         vboList = new ArrayList<>();
+        this.positions = positions;
 
         vao = GL46.glGenVertexArrays();
         GL46.glBindVertexArray(vao);
@@ -30,7 +32,7 @@ public class Mesh {
         GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, vbo);
         GL46.glBufferData(GL46.GL_ARRAY_BUFFER, positionsBuffer, GL46.GL_STATIC_DRAW);
         GL46.glEnableVertexAttribArray(0);
-        GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, 0, 0);
+        GL46.glVertexAttribPointer(0, 3, GL46.GL_FLOAT, false, 12, 0);
 
         // Texture coordinates VBO
         vbo = GL46.glGenBuffers();
@@ -40,7 +42,7 @@ public class Mesh {
         GL46.glBindBuffer(GL46.GL_ARRAY_BUFFER, vbo);
         GL46.glBufferData(GL46.GL_ARRAY_BUFFER, textsBuffer, GL46.GL_STATIC_DRAW);
         GL46.glEnableVertexAttribArray(1);
-        GL46.glVertexAttribPointer(1, 2, GL46.GL_FLOAT, false, 0, 0);
+        GL46.glVertexAttribPointer(1, 2, GL46.GL_FLOAT, false, 12, 0);
 
         // Index VBO
         vbo = GL46.glGenBuffers();
@@ -56,18 +58,19 @@ public class Mesh {
         MemoryUtil.memFree(positionsBuffer);
         MemoryUtil.memFree(textsBuffer);
         MemoryUtil.memFree(indicesBuffer);
-    }
+    } // Mesh
 
     public void cleanup() {
         vboList.forEach(GL46::glDeleteBuffers);
         GL46.glDeleteVertexArrays(vao);
-    }
+    } // cleanup
 
     public int getNumVertices() {
         return numVertices;
-    }
+    } // getNumVerticies
 
     public final int getVao() {
         return vao;
-    }
-}
+    } // getVao
+    
+} // Mesh

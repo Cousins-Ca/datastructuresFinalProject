@@ -5,10 +5,11 @@ layout (location=1) in vec2 texCoord;
 
 out vec2 outTextCoord;
 
-uniform mat4 projection;
+uniform mat4 ortho;
+uniform mat4 view;
 
 void main()
 {
-    gl_Position = projection * vec4(position, 1.0);
+    gl_Position = ortho * view * vec4(position, 1.0);
     outTextCoord = texCoord;
 }
